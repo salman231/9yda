@@ -1,0 +1,184 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $storeName = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Magento\Store\Model\StoreManagerInterface::class)
+    ->getStore()
+    ->getCode(); ?>
+		
+<?php $buttonTitle = __('Add to Cart'); ?> 
+<input type="hidden" name="addtocart" id="addtocart">                                           
+<?php if ($_product->isSaleable()): ?>
+    <div class="box-tocart">
+        <div class="fieldset">
+            <?php if ($block->shouldRenderQuantity()): ?>
+                <div class="field qty">
+                    <label class="label" for="qty"><span><?php /* @escapeNotVerified */
+                            echo __('Qty') ?></span></label>
+                    <div class="control control-qty-cart">
+                        <input type="number"
+                               name="qty"
+                               id="qty"
+                               maxlength="12"
+                               value="<?php /* @escapeNotVerified */
+                               echo $block->getProductDefaultQty() * 1 ?>"
+                               title="<?php /* @escapeNotVerified */
+                               echo __('Qty') ?>" class="qty-default input-text qty"
+                               data-validate="<?php echo $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                        />
+
+                        <div class="control-qty">
+                            <span class="quantity-controls quantity-plus"></span>
+                            <span class="quantity-controls quantity-minus"></span>
+
+                            <script type="text/javascript">
+                                require([
+                                    'jquery'
+                                ], function ($) {
+                                    $('.quantity-plus').click(function () {
+                                        $('.qty-default').val(Number($('.qty-default').val()) + 1);
+                                    });
+
+                                    $('.quantity-minus').click(function () {
+                                        var value = Number($('.qty-default').val()) - 1;
+                                        if (value > 0) {
+                                            $('.qty-default').val(value);
+                                        }
+
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <div class="actions">
+            <?php if ($storeName =='ar') : ?>
+                <button type="submit"
+                        title="9yda"
+                        class="action primary tocart btn-now"
+                        style="visibility: hidden;position: absolute;" 
+                        id="product-addtocart-button">
+                <span><img src="https://9yda.com/pub/media/wysiwyg/BuyNow.png" alt="Buy Now"></span>
+                </button>
+                <button type="button"
+                        title="9yda"
+                        class="btn-buy-now"
+                        id="product-addtocart-button">
+                <span><img src="https://9yda.com/pub/media/wysiwyg/BuyNow.png" alt="Buy Now"></span>
+                </button>
+                <button type="button"
+                    	title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                    	class="btn-cart"
+                    	id="product_addtocart_form-cart">
+	                <span><?= $block->escapeHtml($buttonTitle) ?></span>
+	            </button>
+                <?php else: ?>
+                <button type="submit"
+                        title="9yda"
+                        class="action primary tocart btn-now"
+                        style="visibility: hidden;position: absolute;" 
+                        id="product-addtocart-button">
+                <span><img src="https://9yda.com/pub/media/wysiwyg/Buy.png" alt="Buy Now"></span>
+                </button>
+                <button type="button"
+                        title="9yda"
+                        class="btn-buy-now"
+                        id="product-addtocart-button">
+                <span><img src="https://9yda.com/pub/media/wysiwyg/Buy.png" alt="Buy Now"></span>
+                </button>
+                <button type="button"
+                    	title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                    	class="btn-cart"
+                    	id="product_addtocart_form-cart">
+	                <span><?= $block->escapeHtml($buttonTitle) ?></span>
+	            </button>
+                <?php endif; ?>
+                <?php echo $block->getChildHtml('', true) ?>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<?php if (!$block->isRedirectToCartEnabled()) : ?>
+    <script>
+        require([
+            'jquery',
+            'mage/mage',
+            'Magento_Catalog/product/view/validation',
+            'Magento_Catalog/js/catalog-add-to-cart'
+        ], function ($) {
+            'use strict';
+
+            $('#product_addtocart_form').mage('validation', {
+                radioCheckboxClosest: '.nested',
+                submitHandler: function (form) {
+                    var widget = $(form).catalogAddToCart({
+                        bindSubmit: false
+                    });
+
+                    widget.catalogAddToCart('submitForm', $(form));
+
+                    return false;
+                }
+            });
+        });
+    </script>
+<?php else : ?>
+    <script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/product/view/validation": {
+                "radioCheckboxClosest": ".nested"
+            }
+        }
+    }
+
+    
+    </script>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form-cart": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        'use strict';
+
+        $(document).ready(function($){
+	        $(".btn-cart").click(function(){
+			  	$("#addtocart").val('1');
+			  	setTimeout(function(){ $(".btn-now").trigger('click'); }, 1000);
+			});
+			$(".btn-buy-now").click(function(){
+			  	$("#addtocart").val('');
+                setTimeout(function(){ $(".btn-now").trigger('click'); }, 1000);
+			});
+	    });
+    });
+</script>
+<style type="text/css">
+    .catalog-product-view .box-tocart .fieldset{
+        background-color: unset !important;
+    }
+    .catalog-product-view .box-tocart .fieldset .actions{
+        clear: both;
+        margin-top: 8px;
+    }
+    .btn-cart{
+        background-color: #f57224 !important;
+    }
+</style>
+

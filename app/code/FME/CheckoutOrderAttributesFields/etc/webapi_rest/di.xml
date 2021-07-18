@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Api\DataObjectHelper">
+        <plugin name="fix_coaf_array" type="FME\CheckoutOrderAttributesFields\Plugin\DataObjectHelper" sortOrder="1"/>
+    </type>
+    <preference for="Magento\Framework\Webapi\ServiceInputProcessor" type="FME\CheckoutOrderAttributesFields\Rewrite\Framework\ServiceInputProcessor"/>
+    
+</config>

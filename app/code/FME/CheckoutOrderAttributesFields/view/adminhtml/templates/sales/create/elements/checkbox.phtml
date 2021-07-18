@@ -1,0 +1,58 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+/* @var $block \FME\CheckoutOrderAttributesFields\Block\Element\Multiselect */
+?>
+<?php
+$selectedOrder = $block->getSelectedOrder();
+$selectedValues = $block->getValues();
+$org = true;
+if ($selectedOrder != null) {
+    $coaf = json_decode($selectedOrder->getCoaf(), true);
+    //echo "<pre>";print_r($coaf[$block->getCurrentAttribute()->getAttributeCode()]);exit;
+    $selectedValues = isset($coaf[$block->getCurrentAttribute()->getAttributeCode()]['value'])?$coaf[$block->getCurrentAttribute()->getAttributeCode()]['value']:[];
+    $org = false;
+}
+if (!is_array($selectedValues)) {
+    $selectedValues = explode(', ', $selectedValues);
+}
+$ElementClass = 'admin__field field field-' . $block->getAttributeId();
+$ElementClass .= $block->isRequired() ? ' required _required' : '';
+?>
+<div class="<?php /* @escapeNotVerified */ echo $ElementClass; ?>">
+    <label class="label admin__field-label" for="<?php echo $block->getAttributeId()?>"><span><?php /* @escapeNotVerified */ echo $block->getLabel() ?></span></label>
+    <div class="admin__field-control">
+
+        <?php foreach ($block->getOptions() as $option):  ?>
+            <?php $selected = false;
+            if ($org && $block->isSelected($option['value'])) { 
+                $selected = true;
+            } elseif ($org == false && in_array($option['label'], $selectedValues)) {
+                $selected = true;
+            } ?>
+        <input id="<?php echo $block->getAttributeId()."-".$option['value'];?>"
+            type="checkbox" 
+            attribute_code="<?php echo $block->getAttributeName(); ?>"
+            name="<?php echo $block->getAttributeName($option['value']);?>"
+            acode =  "<?php echo $block->getCurrentAttribute()->getAttributeCode(); ?>"
+            dependable = "<?php echo $block->getCurrentAttribute()->getFmeDependable(); ?>"
+            dcode = "<?php echo $block->getCurrentAttribute()->getFmeDcode(); ?>"
+            did = "<?php echo $block->getCurrentAttribute()->getFmeDid(); ?>"
+            dvalue = "<?php echo $block->getCurrentAttribute()->getFmeDvalue(); ?>"
+            value="<?php /* @escapeNotVerified */ echo $option['value']?>" <?php if ($selected == true):?> checked="checked"<?php endif;?>
+            <?php if ($block->getValidateClasses()):?> class="admin__control-checkbox validate-one-required-by-name-checkbox" <?php endif;?>
+            data-form-part="customer_form"
+            /><label class="admin__field-label" for="<?php echo $block->getAttributeId()."-".$option['value'];?>"><?php echo $option['label']; ?></label> <br style="display:block !important" />
+        <?php endforeach;?>
+        <!-- <input data-form-part="customer_form" type="hidden" value="<?php //echo $block->getValue();?>" name="<?php //echo $block->getAttributeName();?>" id="<?php //echo $block->getAttributeName();?>" /> -->
+        <?php if ($_tooltip = $block->getTooltip()) : ?>
+        <div class="note"><?php /* @escapeNotVerified */ echo $_tooltip; ?></div>
+        <?php endif; ?>
+    </div>
+</div>

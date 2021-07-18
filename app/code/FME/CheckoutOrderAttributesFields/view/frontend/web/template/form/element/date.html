@@ -1,0 +1,32 @@
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+<input class="input-text" type="text" autocomplete="off" data-bind="
+    hasFocus: focused,
+    datepicker: { storage: value, options: options },
+    attr: {
+        value: value,
+        name: inputName,
+        placeholder: placeholder,
+        'aria-describedby': getDescriptionId(),
+        'aria-required': required,
+        'aria-invalid': error() ? true : 'false',
+        disabled: disabled,
+        attribute_code: attributeCode,
+        acode: acode,
+        dependable: dependable,
+        dcode: dcode,
+        did: did,
+        drequired: drequired,
+        dvalue: dValue,
+        cd: countryDepend,
+        cl: countryList,
+        dc: disableCountry
+    }" />

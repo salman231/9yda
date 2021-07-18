@@ -1,0 +1,81 @@
+select::-ms-expand {
+    display: none;
+}
+.cart.table-wrapper tbody.cart.item .control.qty{
+	border: 1px solid #adadad;
+    border-radius: 10px !important;
+}
+.cart.table-wrapper tbody.cart.item .control.qty label{
+	display: flex;
+	align-items: center;
+}
+.cart.table-wrapper tbody.cart.item .control.qty input {
+    border: unset;
+    margin-top: 0;
+}
+.cart.table-wrapper tbody.cart.item .control.qty .increaseQty , .cart.table-wrapper tbody.cart.item .control.qty .decreaseQty{
+    background-color: transparent ! important;
+    color: #212529 !important;
+    font-size: 20px !important;
+    padding: 0 ! important;
+    width: 25px;
+}
+.cart.table-wrapper tbody.cart.item .control.qty .increaseQty{
+	border-right: 1px solid #adadad ! important;
+}
+.cart.table-wrapper tbody.cart.item .control.qty .decreaseQty{
+	border-left: 1px solid #adadad ! important;
+}
+.table-checkout-shipping-method tbody .col-method {
+    display: none;
+}
+.table-checkout-shipping-method tbody .col-method:first-child {
+    display: block;
+}
+.onestepcheckout-index-index .field.choice input[type="radio"] {
+    display: inline-block ! important;
+}
+.checkout-container .checkout-payment-method .step-title {
+    text-transform: capitalize;
+    font-weight: normal;
+}
+.checkout-payment-method .payment-method-title label {
+    width: 90%;
+}
+.checkout-payment-method .payment-method-title label[for=knet]:after{
+    content: " ";
+    background-image: url(../images/k-net.png);
+    width: 40px;
+    height: 30px;
+    float: right;
+    display: block;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.product-info-main .product-addto-links .action.towishlist::before, .product-info-main .product-social-links .action.towishlist::before{
+    color: #2c3682 ! important;
+}
+.control-qty .quantity-controls{
+    background-color: #2c3682;
+}
+.form.password.forget button {
+    width: auto ! important;
+}
+@media only screen and (min-width: 768px) {
+    .catalog-category-view .products-grid .product-image-photo{
+        height: 350px;
+    }
+}
+
+@media only screen and (max-width: 767px){
+	.slider-deal-type2 .products-grid .item .item-inner .box-info .product-name{
+		font-size: 16px;
+	}
+	.slider-deal-type2 .products-grid .item .item-inner .box-info .deals-countdown{
+		padding: 0 0 0 60px ! important;
+		float: unset ! important; 
+	}
+    .catalog-category-view .products-grid .product-image-photo{
+        height: 350px;
+    }
+}

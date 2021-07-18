@@ -1,0 +1,20 @@
+{
+  "name": "fme/checkout-order-attributes-fields",
+  "description": "Checkout Order Attributes Fields",
+  "type": "magento2-module",
+  "version": "1.1.3",
+  "authors": [
+    {
+      "name": "Tahir Mehmood",
+      "email": "tahir.mehmood@unitedsol.net"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "FME\\CheckoutOrderAttributesFields\\": ""
+    }
+  }
+}

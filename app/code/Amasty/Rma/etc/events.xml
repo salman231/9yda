@@ -1,0 +1,20 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="amasty_customer_rma_new_message">
+        <observer name="amrma_new_message" instance="Amasty\Rma\Observer\Rma\AutoStatusChange" />
+    </event>
+    <event name="amasty_customer_added_tracking_number_rma">
+        <observer name="amrma_new_tracking" instance="Amasty\Rma\Observer\Rma\AutoStatusChange" />
+    </event>
+    <event name="amasty_customer_rated_rma">
+        <observer name="amrma_rated" instance="Amasty\Rma\Observer\Rma\AutoStatusChange" />
+    </event>
+    <event name="amasty_customer_rma_canceled">
+        <observer name="amrma_rated" instance="Amasty\Rma\Observer\Rma\AutoStatusChange" />
+    </event>
+    <event name="amasty_rma_status_changed">
+        <observer name="amrma_status_changed" instance="Amasty\Rma\Observer\Rma\StatusChanged" />
+    </event>
+    <event name="amasty_customer_rma_created">
+        <observer name="amrma_rma_created" instance="Amasty\Rma\Observer\Rma\RmaCreated" />
+    </event>
+</config>

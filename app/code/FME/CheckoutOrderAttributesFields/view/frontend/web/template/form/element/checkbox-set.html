@@ -1,0 +1,48 @@
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+
+<fieldset class="field coaf"
+     visible="visible"
+     css="$data.additionalClasses"
+     attr="'data-config-scope': $data.scopeLabel, 'data-index': index +'[]'">
+    <div class="field-control"
+         css="'_with-tooltip': $data.tooltip">
+        <div class="field field-option" outereach="options">
+            <input 
+                ko-checked="$parent.value"
+                ko-disabled="$parent.disabled"
+                css="
+                    'control-radio': !$parent.multiple,
+                    'control-checkbox': $parent.multiple"
+                attr="
+                    attribute_code: $parent.attributeCode,
+                    acode: $parent.acode,
+                    dependable: $parent.dependable,
+                    dcode: $parent.dcode,
+                    cd: $parent.countryDepend,
+                    cl: $parent.countryList,
+                    dc: $parent.disableCountry,
+                    did: $parent.did,
+                    dvalue: $parent.dValue,
+                    drequired: $parent.drequired,
+                    id: ++ko.uid,
+                    name: $parent.index,
+                    value: value,
+                    type: $parent.multiple ? 'checkbox' : 'radio'"/>
+
+            <label class="field-label" html="label" attr="for: ko.uid"/>
+        </div>
+
+        <div class="additional-info" if="$data.additionalInfo" html="$data.additionalInfo"></div>
+
+        <render args="$data.service.template" if="$data.hasService()"/>
+    </div>
+</fieldset>

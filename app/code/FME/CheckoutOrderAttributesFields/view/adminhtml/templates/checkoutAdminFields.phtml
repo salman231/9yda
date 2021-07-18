@@ -1,0 +1,88 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+/* @var $block \FME\CheckoutOrderAttributesFields\Block\Attributes */
+?>
+<?php
+    $helper = $this->helper('FME\CheckoutOrderAttributesFields\Helper\Data');
+    $order = '';
+    if ($block->getOrder()) {
+        $order = $block->getOrder();
+    } elseif ($block->getInvoice()->getOrder()) {
+        $order = $block->getInvoice()->getOrder();
+    } elseif ($block->getCreditmemo()->getOrder()) {
+        $order = $block->getCreditmemo()->getOrder();
+    } elseif ($block->getShipment()->getOrder()) {
+        $order = $block->getShipment()->getOrder();
+    }
+    if ($order) :
+        $_coaf = $order->getCoaf() ?>
+        <?php $coafFields = json_decode($_coaf,true);
+            if ($_coaf != '' && !empty($coafFields)):
+        ?>
+        <section id="coaf_section" class="admin__page-section order-addresses" rel="">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo $helper->getHeading(); ?></span>
+                <div class="actions">
+                    <a id="coaf_edit" style="cursor: pointer;"><?php echo __('Edit'); ?></a>
+                </div>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-account-information-table">
+                    <?php $i = 1; foreach ($coafFields as $field): ?>
+                        <?php if(isset($field['value'])): ?>
+                            <?php if($i%2 != 0): ?>
+                                <tr rel="<?php echo $i; ?>">
+                            <?php endif;
+                             $val = is_array($field['value'])?implode(', ',$field['value']):$field['value'];
+                             if (isset($field['type']) && $field['type'] == 'file' && $field['value'] != '') {
+                                $val = "<a href='".$helper->getMediaUrl($field['value'])."'>".$field['value']."</a>";
+                             } elseif (isset($field['type']) && $field['type'] == 'image' && $field['value'] != '') {
+                                $val = "<a href='".$helper->getMediaUrl($field['value'])."'><img src='".$helper->getMediaUrl($field['value'])."' alt='".$field['value']."' width='150px' /></a>";
+                             }
+                            ?>
+                                <td><?php /* @escapeNotVerified */ echo isset($field['admin_label'])?$field['admin_label']:''; ?></td>
+                                <td><?php  echo $val; ?></td>
+                            <?php if ($i == count($coafFields) && $i%2 != 0): ?>
+                                <td>&nbsp;</td><td>&nbsp;</td>
+                            <?php elseif ($i%2 == 0 || $i == count($coafFields)): ?>
+                                </tr>
+                            <?php endif; $i++; ?>
+                        <?php endif;  ?>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        </section>
+        <script type="text/javascript">
+            require(["jquery"],function($) {
+                $(document).ready(function() {
+                    $('#coaf_edit').click(function(){
+                        var coafUrl = "<?php echo $block->getUrl('checkoutorderattributesfields/customervalues/edit');?>";
+                        $('body').trigger('processStart');
+                        $.ajax({
+                            url: coafUrl,
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                order_id: <?php echo $order->getId(); ?>
+                            },
+                            complete: function(response) {
+                                $('#coaf_section').html(response.responseJSON.html);
+                                $('body').trigger('processStop');
+                            },
+                            error: function (xhr, status, errorThrown) {
+                            }
+                        });    
+                    });
+                });
+            });
+        </script>
+    <?php endif; ?>
+<?php endif; ?>
+

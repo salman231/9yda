@@ -1,0 +1,12 @@
+$_coaf = $order->getCoaf(); // or $order->getExtensionAttributes->getCoaf(); // whichever works.
+$coafFields = json_decode($_coaf);
+if ($_coaf != '' && count((array)$coafFields)) :
+    foreach ($coafFields as $key => $field):
+    	// $field->attribute_id // to get attribute id
+    	// $field->attribute_code // to get the attribute code
+    	// $field->admin_label; //Default store label
+    	// $field->label // customer selected store label
+    	// get customer entered values as following (so that array values show as comma separated)
+        // echo is_array($field->value)?implode(', ',$field->value):$field->value;
+    endforeach;
+endif;

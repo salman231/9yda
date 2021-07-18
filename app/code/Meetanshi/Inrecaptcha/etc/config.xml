@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <inrecaptcha>
+            <general>
+                <enable>0</enable>
+                <urls><![CDATA[customer/account/createpost
+newsletter/subscriber/new
+review/product/post
+contact/index/post]]></urls>
+                <selectors><![CDATA[form[action*="customer/account/createpost"]
+form[action*="newsletter/subscriber/new"]
+form[action*="review/product/post"]
+form[action*="contact/index/post"]]]></selectors>
+            </general>
+        </inrecaptcha>
+    </default>
+</config>

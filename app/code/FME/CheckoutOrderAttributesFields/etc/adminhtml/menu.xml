@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <update id="FME_Extensions::fmeextensions" 
+            title="FME Extensions" 
+            module="Magento_Backend" 
+            sortOrder="70" 
+            resource="FME_Extensions::fmeextensions"/>
+        <add id="FME_CheckoutOrderAttributesFields::attributes"
+            title="Checkout Order Attributes Fields"
+            translate="title"
+            module="FME_CheckoutOrderAttributesFields"
+            sortOrder="30"
+            parent="FME_Extensions::fmeextensions"
+            resource="FME_CheckoutOrderAttributesFields::attributes"/>
+        <add id="FME_CheckoutOrderAttributesFields::fields"
+            title="Manage Fields"
+            translate="title"
+            module="FME_CheckoutOrderAttributesFields"
+            sortOrder="30"
+            parent="FME_CheckoutOrderAttributesFields::attributes"
+            action="checkoutorderattributesfields/attribute/"
+            resource="FME_CheckoutOrderAttributesFields::attributes"/>
+        <add id="FME_CheckoutOrderAttributesFields::configurations"
+            title="Configurations"
+            translate="title"
+            module="FME_CheckoutOrderAttributesFields"
+            sortOrder="30"
+            parent="FME_CheckoutOrderAttributesFields::attributes"
+            action="adminhtml/system_config/edit/section/checkoutorderattributesfields/"
+            resource="FME_CheckoutOrderAttributesFields::attributes"/>
+    </menu>
+</config>

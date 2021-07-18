@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Api\DataObjectHelper">
+        <plugin name="fix_coaf_array" type="FME\CheckoutOrderAttributesFields\Plugin\DataObjectHelper" sortOrder="1"/>
+    </type>
+    <preference for="Magento\Framework\Webapi\ServiceInputProcessor" type="FME\CheckoutOrderAttributesFields\Rewrite\Framework\ServiceInputProcessor"/>
+    <!-- <preference for="Magento\Framework\Api\DataObjectHelper" type="FME\CheckoutOrderAttributesFields\Rewrite\Framework\DataObjectHelper"/> -->
+    <type name="Magento\Sales\Model\Order\Pdf\Invoice">
+        <plugin name="fme_add_fields_in_invoice_pdf" type="FME\CheckoutOrderAttributesFields\Plugin\Sales\Invoice" sortOrder="1"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Creditmemo">
+        <plugin name="fme_add_fields_in_creditmemo_pdf" type="FME\CheckoutOrderAttributesFields\Plugin\Sales\Creditmemo" sortOrder="1"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Shipment">
+        <plugin name="fme_add_fields_in_shipment_pdf" type="FME\CheckoutOrderAttributesFields\Plugin\Sales\Shipment" sortOrder="1"/>
+    </type>
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="fme_add_fields_in_quote" type="FME\CheckoutOrderAttributesFields\Plugin\Checkout\ShippingInformationManagement" sortOrder="1"/>
+    </type>
+    <type name="\Magento\Checkout\Block\Checkout\AttributeMerger">
+        <plugin name="customAttributeMerger" type="FME\CheckoutOrderAttributesFields\Plugin\Checkout\AttributeMergerPlugin"/>
+    </type>
+    <type name="Magento\Checkout\Model\PaymentInformationManagement">
+        <plugin name="fme-save-review-fields" type="FME\CheckoutOrderAttributesFields\Plugin\Checkout\PaymentInformationManagement" sortOrder="1"/>
+    </type>
+    <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
+        <plugin name="fme-save-review-fields-guests" type="FME\CheckoutOrderAttributesFields\Plugin\Checkout\GuestPaymentInformationManagement" sortOrder="1" />
+    </type>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="fme_add_fields_in_order" type="FME\CheckoutOrderAttributesFields\Plugin\Sales\OrderRepositoryPlugin" sortOrder="1" />
+    </type>
+    <type name="FME\CheckoutOrderAttributesFields\Controller\Checkout\Uploader">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">FME\CheckoutOrderAttributesFields\CoafImageUpload</argument>
+        </arguments>
+    </type>
+    <virtualType name="FME\CheckoutOrderAttributesFields\CoafImageUpload" type="FME\CheckoutOrderAttributesFields\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">coaf/files</argument>
+            <argument name="basePath" xsi:type="string">coaf/files</argument>
+        </arguments>
+    </virtualType>
+</config>

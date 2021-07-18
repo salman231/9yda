@@ -1,0 +1,315 @@
+<?php
+/**
+ * Webkul Software.
+ *
+ * @category  Webkul
+ * @package   Webkul_MarketplaceEventManager
+ * @author    Webkul
+ * @copyright Copyright (c) Webkul Software Private Limited (https://webkul.com)
+ * @license   https://store.webkul.com/license.html
+ */
+
+/** @var $block \Webkul\MarketplaceEventManager\Block\Event\Add */
+$helper = $this->helper('Webkul\Marketplace\Helper\Data');
+$memhelper = $this->helper('Webkul\MarketplaceEventManager\Helper\Data');
+$currency_code = $helper->getCurrentCurrencyCode();
+$currency_symbol = $helper->getCurrencySymbol();
+$skuType = $helper->getSkuType();
+$skuPrefix = $helper->getSkuPrefix();
+$allowedType = explode(',', $helper->getAllowedProductType());
+?>
+<form action="<?= /* noEscape */ $block->getUrl('marketplaceeventmanager/event/save', ['_secure' => $this->getRequest()->isSecure()]) ?>" enctype="multipart/form-data" method="post" id="form-seller-event-new" data-form="edit-product" data-mage-init='{"validation":{}}'>
+    <div class="wk-mp-design" id="wk-bodymain">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend">
+                <span><?= /* noEscape */ __('Add New Coupon') ?></span>
+                <button class="button wk-mp-btn" title="<?= /* noEscape */ __('Save') ?>" type="submit" id="save-btn">
+                    <span><span><?= /* noEscape */ __('Save') ?></span></span>
+                </button>
+            </legend>
+            <?= /* noEscape */ $block->getBlockHtml('formkey')?>
+            <?= /* noEscape */ $block->getBlockHtml('seller.formkey')?>
+            <input type="hidden" name="type" id="producttype" value="etickets" />
+            <input type="hidden" name="product[is_mp_event]" value="1" />
+            <?php if (count($helper->getAllowedSets()) > 1) { ?>
+                <div class="field required">
+                    <label class="label"><?= /* noEscape */ __('Attribute Set') ?>:</label>
+                    <div class="control">
+                        <select name="set" id="attribute-set-id" class="required-entry">
+                        <?php foreach ($helper->getAllowedSets() as $setval) {?>
+                            <option value="<?= /* noEscape */ $setval['value'] ?>" ><?= /* noEscape */ $setval['label']?></option>
+                        <?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <?php
+            } else {
+                $allowedSets = $helper->getAllowedSets();
+                ?>
+                <input type="hidden" name="set" id="attribute-set-id" value="<?= /* noEscape */ $allowedSets[0]['value'] ?>" />
+                <?php
+            } ?>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Coupon Category') ?>:</label>
+                <div class="wk-field wk-category">
+                    <div class="wk-for-validation">
+                        <div id="wk-category-label"><?= /* noEscape */ __("CATEGORIES"); ?></div>
+                        <?php
+                        if ($memhelper->getAllowedCategoryIds()) {
+                            $storeconfig_catids = explode(',', trim($memhelper->getAllowedCategoryIds()));
+                            $storeconfig_catids = array_unique($storeconfig_catids);
+                            foreach ($storeconfig_catids as $storeconfig_catid) {
+                                $cat_model = $block->getCategory()->load($storeconfig_catid);
+                                if (isset($cat_model["entity_id"]) && $cat_model["entity_id"]) {
+                                    ?>
+                                    <div class="wk-cat-container">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span class="wk-elements wk-cat-name"><?= /* noEscape */ $cat_model->getName() ?></span>
+                                        <input class="wk-elements" type="checkbox" name="product[category_ids][]" value='<?= /* noEscape */ $cat_model['entity_id'] ?>'/>
+                                    </div> 
+                                       <?php
+                                }
+                            }
+                        } else {
+                            $count = 0;
+                            $category_helper = $this->helper('Magento\Catalog\Helper\Category');
+                            $category_model = $block->getCategory();
+                            $_categories = $category_helper->getStoreCategories();
+                            foreach ($_categories as $_category) {
+                                $count++;
+                                if (count($category_model->getAllChildren($category_model->load($_category['entity_id'])))-1 > 0) { ?>
+                                    <div class="wk-cat-container" style="margin-left:0px;">
+                                        <span class="wk-plus">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span class="wk-elements wk-cat-name"><?= /* noEscape */ $_category->getName() ?></span>
+                                        <input class="wk-elements" type="checkbox" name="product[category_ids][]" value='<?= /* noEscape */ $_category['entity_id'] ?>'/>
+                                    </div>
+                                    <?php
+                                } else { ?>
+                                    <div class="wk-cat-container">
+                                        </span><span class="wk-foldersign"></span>
+                                        <span class="wk-elements wk-cat-name"><?= /* noEscape */ $_category->getName() ?></span>
+                                        <input class="wk-elements" type="checkbox" name="product[category_ids][]" value='<?= /* noEscape */ $_category['entity_id'] ?>'/>
+                                    </div> 
+                                       <?php
+                                }
+                            }
+                        } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Coupon Name') ?>:</label>
+                <div class="control">
+                    <input type="text" class="required-entry input-text" name="product[name]" id="name"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Description') ?>:</label>
+                <div class="control">
+                    <textarea name="product[description]" class="required-entry input-text" id="description" rows="5" cols="75" ></textarea>                            
+                    <script>
+                        require([
+                            "jquery",
+                            "mage/translate",
+                            "mage/adminhtml/events",
+                            "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                        ], function(jQuery) {
+                            wysiwygDescription = new wysiwygSetup("description", {
+                                "width" : "100%",
+                                "height" : "200px",
+                                "plugins" : [{"name":"image"}],
+                                "tinymce4" : {
+                                    "toolbar":"formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap","plugins":"advlist autolink lists link charmap media noneditable table contextmenu paste code help table",
+                                }
+                            });
+                            wysiwygDescription.setup("exact");
+                        });
+                    </script>
+                </div>
+            </div>
+            <div class="field ">
+                <label class="label"><?= /* noEscape */ __('Short Description') ?>:</label>
+                <div class="control">
+                    <textarea name="product[short_description]" class="input-text" id="sdescription" rows="5" cols="75" ></textarea>                            
+                    <script>
+                        require([
+                            "jquery",
+                            "mage/translate",
+                            "mage/adminhtml/events",
+                            "mage/adminhtml/wysiwyg/tiny_mce/setup"
+                        ], function(jQuery) {
+                            wysiwygShortDescription = new wysiwygSetup("sdescription", {
+                                "width" : "100%",
+                                "height" : "200px",
+                                "plugins" : [{"name":"image"}],
+                                "tinymce4" : {
+                                    "toolbar":"formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap","plugins":"advlist autolink lists link charmap media noneditable table contextmenu paste code help table",
+                                }
+                            });
+                            wysiwygShortDescription.setup("exact");
+                        });
+                    </script>
+                </div>
+            </div>
+            
+            
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Coupon Unique Code') ?>:</label>
+                <div class="control">
+                    <input name="product[sku]" id="sku" class="required-entry input-text validate-no-html-tags" type="text" />
+                </div>
+                <div id="skuavail" style="color:green">
+                    <span class="success-msg skuavailable"><?= /* noEscape */ __('Coupon Code Available') ?></span>
+                </div>
+                <div id="skunotavail" style="color:red;">
+                    <span class="error-msg skunotavailable"><?= /* noEscape */ __('Coupon Code Already Exist') ?></span>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Quantity') ?>:</label>
+                <div class="control">
+                    <input type="text" class="required-entry input-text" name="product[qty]" id="qty"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Price') ?><b><?= /* noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                <div class="control">
+                    <input type="text" class="required-entry validate-zero-or-greater input-text" name="product[price]" id="price" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Special Price') ?><b><?= /* noEscape */  " (".$currency_symbol.")"; ?></b>:</label>
+                <div class="control">
+                    <input type="text" class="widthinput input-text validate-zero-or-greater" name="product[special_price]" id="special-price"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Special Price From') ?>:</label>
+                <div class="control">
+                    <input type="text" name="product[special_from_date]" id="special-from-date" class="input-text" />
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Special Price To') ?>:</label>
+                <div class="control">
+                    <input type="text" name="product[special_to_date]" id="special-to-date" class="input-text"/>
+                </div>
+            </div>
+            <input id="inventory_manage_stock" type="hidden" name="product[stock_data][manage_stock]" value="1">
+            <input type="hidden" value="1" name="product[stock_data][use_config_manage_stock]" id="inventory_use_config_manage_stock">
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Visibility') ?>:</label>
+                <div class="control">
+                    <select id="visibility" class=" required-entry required-entry select" name="product[visibility]">
+                        <option value=""><?= /* noEscape */ __('Please Select')?></option>
+                        <?php
+                        $product_visibility = $helper->getVisibilityOptionArray();
+                        foreach ($product_visibility as $key => $value) {
+                            ?>
+                            <option value="<?= /* noEscape */ $key ?>"><?= /* noEscape */ $value?></option>
+                            <?php
+                        } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Tax Class') ?>:</label>
+                <div class="control">
+                    <select id="tax-class-id" class="required-entry select" name="product[tax_class_id]">
+                        <option value="0"><?= /* noEscape */ __('None')?></option>
+                        <?php
+                        $taxes=$helper->getTaxClassModel();
+                        foreach ($taxes as $tax) {
+                            ?>
+                            <option value="<?= /* noEscape */ $tax->getId() ?>"><?= /* noEscape */ $tax->getClassName()?></option>
+                            <?php
+                        } ?>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Set Coupon Code Prefix') ?>:</label>
+                <div class="control">
+                    <input type="text" name="product[event_ticket_prefix]" id="event_ticket_prefix" class="input-text"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Coupon Valid From') ?>:</label>
+                <div class="control input-append date start_datetime show" data-date="2013-02-21T15:25:00Z">
+                    <input type="text" name="product[event_start_date]" id="event_start_date" class="required-entry input-text"/>
+                </div>
+            </div>
+            <div class="field required">
+                <label class="label"><?= /* noEscape */ __('Coupon Expired On') ?>:</label>
+                <div class="control input-append date stop_datetime show" data-date="2013-02-21T15:25:00Z">
+                    <input type="text" name="product[event_end_date]" id="event_end_date" class="required-entry input-text"/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Meta Title') ?>:</label>
+                <div class="control">
+                    <input type="text" class="input-text" name="product[meta_title]" id="meta_title" value=""/>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Meta Keywords') ?>:</label>
+                <div class="control">
+                    <textarea class="textarea" id="meta_keyword" name="product[meta_keyword]"></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label"><?= /* noEscape */ __('Meta Description') ?>:</label>
+                <div class="control">
+                    <textarea class="textarea" id="meta_description" name="product[meta_description]"></textarea>
+                </div>
+            </div>
+           
+            <div class="buttons-set field required">
+                <p class="label">Required Fields</p>
+                <p class="back-link">
+                    <a class="left" onclick="javascript: window.history.back();" href="javascript:;">« Back</a>
+                </p>
+            </div>
+        </fieldset>
+    </div>
+</form>
+<?php
+$formData = [
+    'countryPicSelector' => '#country-pic',
+    'verifySkuAjaxUrl' => $block->getUrl('marketplace/product/verifysku', ['_secure' => $this->getRequest()->isSecure()]),
+    'categoryTreeAjaxUrl' => $block->getUrl('marketplace/product/categorytree/', ['_secure' => $this->getRequest()->isSecure()])
+];
+$serializedFormData = $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($formData);
+?>
+<script type="text/x-magento-init">
+    {
+        "body": {
+            "Webkul_MarketplaceEventManager/js/sellerAddProductjs": <?php /* @noEscape */ echo $serializedFormData; ?>
+        }
+    }
+</script>
+<!-- <script id="customOptionTemplate" type="text/x-magento-template">
+    <tr>
+        <td>
+            <input type="text" name="selectoptions[0][0][title]" class="required-entry">
+        </td>
+        <td>
+            <input type="text" name="selectoptions[0][0][price]" class="required-entry validate-number">
+        </td>
+        <td>
+            <select name="selectoptions[0][0][price_type]" class="required-entry importantWidth"><option value="fixed"><?php //echo __('Fixed'); ?></option><option value="percent"> <?php //echo __('Percent'); ?> </option></select>
+        </td>
+        <td>
+            <input type="text" name="selectoptions[0][0][qty]" class="required-entry validate-number">
+        </td>
+        <td><input type="text" name="selectoptions[0][0][sku]">
+        </td>
+        <td></td>
+    </tr>
+</script> -->
+<style>
+div[id^="product[options]"]{
+    display:none!important;
+}
+</style>

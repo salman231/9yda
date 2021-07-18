@@ -1,0 +1,23 @@
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+ -->
+<div data-bind="fadeVisible: isVisible">
+    <form id="coaf-checkout-shippingmethod-form" class="form  coaf-checkout-additional-form" data-mage-init='{"validation": {}}' data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+        <fieldset class="fieldset" data-role="coaf-fields">
+            <!--<legend><span class="step-title" data-bind="i18n: 'Shipping Method Checkout Fields'"></span></legend><br>-->
+            <!-- ko foreach: getRegion('coaf-checkout-shippingmethod-form-fields') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+        </fieldset>
+        <button type="button" data-bind="click: onSubmit" style="visibility:hidden" class="action">
+            <span data-bind="i18n: 'Submit'"></span>
+        </button>
+    </form>
+</div>

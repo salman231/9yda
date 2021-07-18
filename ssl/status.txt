@@ -1,0 +1,14 @@
+● nginx.service - nginx - high performance web server
+   Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+   Active: failed (Result: exit-code) since Tue 2020-12-01 05:58:27 EST; 9min ago
+     Docs: http://nginx.org/en/docs/
+  Process: 22569 ExecStop=/bin/sh -c /bin/kill -s TERM $(/bin/cat /var/run/nginx.pid) (code=exited, status=0/SUCCESS)
+  Process: 22596 ExecStart=/usr/sbin/nginx -c /etc/nginx/nginx.conf (code=exited, status=1/FAILURE)
+ Main PID: 7826 (code=exited, status=0/SUCCESS)
+
+Dec 01 05:58:27 9yda systemd[1]: Starting nginx - high performance web server...
+Dec 01 05:58:27 9yda nginx[22596]: nginx: [emerg] SSL_CTX_use_PrivateKey("/var/www/market/ssl/HSSL-5f99ad8f4fb54.key") failed (SSL: error:0B080074:x509 certificate routines:X509_check_private_key:key values mismatch)
+Dec 01 05:58:27 9yda systemd[1]: nginx.service: Control process exited, code=exited status=1
+Dec 01 05:58:27 9yda systemd[1]: Failed to start nginx - high performance web server.
+Dec 01 05:58:27 9yda systemd[1]: nginx.service: Unit entered failed state.
+Dec 01 05:58:27 9yda systemd[1]: nginx.service: Failed with result 'exit-code'.

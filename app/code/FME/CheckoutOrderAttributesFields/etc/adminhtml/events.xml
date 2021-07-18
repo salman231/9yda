@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="core_layout_render_element">
+        <observer name="save_fields_to_order_view" instance="FME\CheckoutOrderAttributesFields\Observer\AddHtmlToOrderShippingViewObserver" />
+    </event>
+    <event name="checkout_submit_all_after">
+        <observer name="save_fields_to_order_from_admin" instance="FME\CheckoutOrderAttributesFields\Observer\SaveFieldsForAdminOrderObserver" />
+    </event>
+</config>

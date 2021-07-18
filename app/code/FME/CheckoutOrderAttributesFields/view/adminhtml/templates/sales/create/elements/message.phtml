@@ -1,0 +1,38 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+/* @var $block \FME\CheckoutOrderAttributesFields\Block\Element\Textarea */
+?>
+<?php
+$selectedOrder = $block->getSelectedOrder();
+$selectedValues = $block->getValue();
+
+$ElementClass = 'admin__field field field-' . $block->getAttributeId();
+$ElementClass .= $block->isRequired() ? ' required' : '';
+?>
+<div class="<?php /* @escapeNotVerified */ echo $ElementClass; ?>">
+    <label class="label admin__field-label" for="<?php echo $block->getAttributeId()?>"><span><?php /* @escapeNotVerified */ echo $block->getLabel() ?></span></label>
+    <div class="admin__field-control">
+        <span id="<?php echo $block->getAttributeId()?>" 
+        	attribute_code="<?php echo $block->getAttributeName(); ?>"
+            name="<?php echo $block->getAttributeName();?>"
+            acode =  "<?php echo $block->getCurrentAttribute()->getAttributeCode(); ?>"
+            dependable = "<?php echo $block->getCurrentAttribute()->getFmeDependable(); ?>"
+            dcode = "<?php echo $block->getCurrentAttribute()->getFmeDcode(); ?>"
+            did = "<?php echo $block->getCurrentAttribute()->getFmeDid(); ?>"
+            dvalue = "<?php echo $block->getCurrentAttribute()->getFmeDvalue(); ?>"
+            type= "message"
+        	>
+        	<?php /* @escapeNotVerified */ echo $selectedValues; ?>	
+        </span>
+        <?php if ($_tooltip = $block->getTooltip()) : ?>
+        <div class="note"><?php /* @escapeNotVerified */ echo $_tooltip; ?></div>
+        <?php endif; ?>
+    </div>
+</div>

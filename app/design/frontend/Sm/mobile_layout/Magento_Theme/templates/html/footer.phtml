@@ -1,0 +1,30 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var \Magento\Theme\Block\Html\Header $block
+ */
+ $storeName = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Magento\Store\Model\StoreManagerInterface::class)
+    ->getStore()
+    ->getCode();
+    $iPod = stripos($_SERVER['HTTP_USER_AGENT'],"iPod");
+$iPhone = stripos($_SERVER['HTTP_USER_AGENT'],"iPhone");
+$iPad = stripos($_SERVER['HTTP_USER_AGENT'],"iPad");
+$Android= stripos($_SERVER['HTTP_USER_AGENT'],"Android");
+?>
+<div class="footer-mobile">
+
+<?php if ($storeName =='ar') : ?>
+
+    <?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('footer-mobile-ar')->toHtml(); ?>
+    <?php else: ?>
+    <?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('footer-mobile')->toHtml(); ?>
+     <?php endif; ?>
+</div>
+

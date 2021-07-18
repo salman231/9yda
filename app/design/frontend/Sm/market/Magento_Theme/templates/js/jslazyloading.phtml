@@ -1,0 +1,66 @@
+<!--
+* @author: Salman Hanif
+* @email: salman.hanif@rltsquare.com
+-->
+<script>
+
+    // Load initial js bundle
+    var js_delay_load = 300;
+    var main_js_loaded = false;
+    var loadMainJsEventId = '';
+
+    window.addEventListener("DOMContentLoaded", function(event){
+        loadMainJsEventId = setTimeout(function(){loadMainJs();},js_delay_load);
+    });
+
+    window.addEventListener("scroll", function(event){
+        js_delay_load=500;
+        loadMainJs();
+    });
+
+    window.addEventListener("mousemove", function(){
+        js_delay_load=500;
+        loadMainJs();
+    });
+
+    window.addEventListener("touchstart", function(){
+        js_delay_load=500;
+        loadMainJs();
+    });
+
+    function loadMainJs(){
+        if(main_js_loaded || window["merged_js_url"] == undefined){
+            return;
+        }
+        let scriptTag = document.createElement("script");
+        scriptTag["type"] = "text/javascript";
+        scriptTag["src"] = window["merged_js_url"];
+        scriptTag.addEventListener('load', function(){
+            delayLoadJs();
+        }, false);
+        document.getElementsByTagName("head")[0].appendChild(scriptTag);
+        main_js_loaded = true;
+
+        if(loadMainJsEventId != ''){
+            clearTimeout(loadMainJsEventId);
+        }
+    }
+
+    function delayLoadJs() {
+        var _scripts = document.getElementsByTagName("script"),
+            _doc = document,
+            _txt = "text/delayscript";
+
+        for (var i = 0, l = _scripts.length; i < l; i++) {
+            var _type = _scripts[i].getAttribute("type");
+            if (_type && _type.toLowerCase() == _txt)
+                _scripts[i].parentNode.replaceChild((function (sB) {
+                    var _s = _doc.createElement('script');
+                    _s.type = 'text/javascript';
+                    _s.innerHTML = sB.innerHTML;
+
+                    return _s;
+                })(_scripts[i]), _scripts[i]);
+        }
+    }
+</script>

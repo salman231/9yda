@@ -1,0 +1,101 @@
+<?php
+        $pid = $this->getRequest()->getParam('pid');
+        $oid = $this->getRequest()->getParam('oid');
+        $helper = $this->helper('Webkul\MarketplaceEventManager\Helper\Data');
+        $realOrderId = $block->getRealOrderIdVal();
+        $productadata = $block->getTicketDetails();
+
+if (!empty($productadata) && $productadata) {
+    $optiontpe = '';
+    $product = $block->getProductDetails($productadata->getProductId(), $productadata);
+    $optionid = 0;
+    $options = $product->getProductOptionsCollection();
+    $ticketData = $productadata['product_options'];
+    foreach ($ticketData as $tds) {
+        foreach ($tds as $td) {
+            if (isset($td['option_id']) && isset($td['value'])) {
+                    $optionid = $td['option_id'];
+                     $optiontpe = $td['value'];
+            }
+        }
+    }
+            $collection  = $block->getTicketDetailsCollection($productadata->getOrderId(), $productadata->getId(), $optionid);
+    ?>
+         <div class="wk-mp-design" id="wk-bodymain">
+        <fieldset class="fieldset info wk-mp-fieldset">
+            <legend class="legend">
+                <span><?= /* noEscape */ __('Your Coupon Details') ?></span>
+            </legend>
+        </fieldset>
+        <div class="event-ticket-view">
+            <table>
+                <tr>
+                     <td><?= /* noEscape */ __('9YDA VOUCHER QR CODE'); ?></td>
+                     <td><p>
+                 <?php
+                    $qrimage = '';
+                    foreach ($collection as $col) {
+                               $qrimage = $helper->getQrImageUrl($col->getQrcode());
+                    }
+
+                    ?>
+                          <img src="<?= /* noEscape */ $qrimage; ?>" />
+                    </p></td>
+                </tr>
+                
+                    <tr>
+                        <td><?= /* noEscape */ __('Coupon Code'); ?></td>
+                        <td><p>
+                            <?= /* noEscape */ $helper->getEventTicketPrefix($pid).$col->getQrcode(); ?>
+                        </p></td>
+                    </tr>
+                    <tr>
+                        <td><?= /* noEscape */ __('Coupon Quantity'); ?></td>
+                        <td><p>
+                            <?= /* noEscape */ $col->getOptionQty(); ?>
+                        </p></td>
+                    </tr>
+                    <tr>
+                        <td><?= /* noEscape */ __('Coupon Status'); ?></td>
+                        <td><p>
+                            <?php
+                            if ($col->getStatus() == 1) {
+                                echo __("Valid Coupon");
+                            } else {
+                                echo __("Used Coupon");
+                            }
+                            ?></p>
+                        </p></td>
+                    </tr>
+                    
+                    
+                     <tr>
+                         <td><?= /* noEscape */ __('Coupon Valid From'); ?></td>
+                         <td><p>
+                             <?= /* noEscape */ date('g:ia \o\n l jS F Y', strtotime($product->getEventStartDate())); ?>
+                         </p></td>
+                     </tr>
+                     <tr>
+                         <td><?= /* noEscape */ __('Coupon Expired On'); ?></td>
+                         <td><p>
+                             <?= /* noEscape */ date('g:ia \o\n l jS F Y', strtotime($product->getEventEndDate())); ?>
+                         </p></td>
+                     </tr>
+                </table>
+             </div>
+        </div>
+        <?php
+} else {
+    echo '<h5 style="color:red">'.__('invalid Request').'</h5>';
+}
+?>
+<script>
+        require([
+            "jquery",
+            "mage/mage"
+        ], function($){
+            $(document).ready(function() {
+                window.print();
+            })
+        })
+</script>

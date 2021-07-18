@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Api/etc/extension_attributes.xsd">
+	<extension_attributes for="Magento\Quote\Api\Data\AddressInterface">
+		<attribute code="coaf" type="Magento\Framework\Api\AttributeInterface[]" />
+	</extension_attributes>
+	<extension_attributes for="Magento\Checkout\Api\Data\ShippingInformationInterface">
+		<attribute code="coaf" type="Magento\Framework\Api\AttributeInterface[]" />
+	</extension_attributes>
+	<extension_attributes for="Magento\Checkout\Api\Data\PaymentDetailsInterface">
+		<attribute code="coaf" type="Magento\Framework\Api\AttributeInterface[]" />
+	</extension_attributes>
+	<extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
+		<attribute code="coaf" type="Magento\Framework\Api\AttributeInterface[]" />
+	</extension_attributes>
+	<extension_attributes for="Magento\Sales\Api\Data\OrderExtension">
+		<attribute code="coaf" type="Magento\Framework\Api\AttributeInterface[]" />
+	</extension_attributes>
+</config>

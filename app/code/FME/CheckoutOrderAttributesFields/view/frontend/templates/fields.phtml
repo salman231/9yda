@@ -1,0 +1,147 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+ 
+$attributes = $block->getAvailableAttributes();
+
+if (!empty($attributes)):
+    $allattributes = $attributes->getData();
+    foreach ($attributes as $attribute) : ?>
+        <?php if($attribute->getFmeDependable() && $attribute->getFmeDcode() != ""
+                 && array_search($attribute->getFmeDcode(), array_column( $allattributes, 'attribute_code')) !== false): ?>
+            <script type="text/javascript">
+                require(['jquery'], function($){
+                    $(function() {
+                        function findOne(haystack, arr) {
+                            if(haystack !== undefined) {
+                                return arr.some(function (v) {
+                                    return haystack.indexOf(v) >= 0;
+                                });
+                            }
+                            return false;
+                        };
+                        function check<?php echo $attribute->getAttributeCode(); ?>Dependency() {
+                            var watchValues = <?php echo json_encode(explode(",", strip_tags($block->getHelper()->getAttributeOptionsValueId($attribute->getFmeDcode(), $attribute->getFmeDvalue())))); ?>;
+                            var inputType = $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').attr('type');
+                            var parentValues = '';
+                           
+                            if (inputType == 'checkbox' || inputType == 'radio') {
+                                parentValues = new Array();
+                                $.each($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]:checked'), function() {
+                                  parentValues.push($(this).val().replace(/(<([^>]+)>)/ig,""));
+                                });
+                            } else if (inputType == 'multiselect' || inputType == 'select') {
+                                parentValues = new Array();
+                                $.each($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"] option:selected'), function() {
+                                  parentValues.push($(this).val().replace(/(<([^>]+)>)/ig,""));
+                                });
+                            } else {
+                                parentValues = $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').val().replace(/(<([^>]+)>)/ig,"");
+                            }
+                            
+                            var found = findOne(parentValues, watchValues) ? 'true' : 'false';
+
+                            if(found == 'true') {
+                                if($('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').attr('dc') == 0) {
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?>').show().prop('disabled', false).attr('depdis',0);
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').prop('disabled', false).attr('depdis',0);
+                                    if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                        $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', false).attr('depdis',0);
+                                    }
+                                    // $('.field-<?php echo $attribute->getAttributeCode(); ?>').removeClass('dependent');
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').removeClass('dependent');
+                                } else { // if dependent on coutnry
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').attr('depdis',0);
+                                    if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                        $('#<?php echo $attribute->getAttributeCode(); ?>_value').attr('depdis',0);
+                                    }
+                                    // $('.field-<?php echo $attribute->getAttributeCode(); ?>').addClass('dependent');
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').addClass('dependent');
+                                }
+                            } else {
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').prop('disabled', true).attr('depdis',1);
+                                if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                    $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                }
+                                // $('.field-<?php echo $attribute->getAttributeCode(); ?>').addClass('dependent');
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').addClass('dependent');
+                            }
+                            if ($('#coaf-checkout-form .validate-fme-fields').is(":visible").length > 0) {
+                                $('#coaf-checkout-form legend span.step-title').show();
+                            } else {
+                                $('#coaf-checkout-form legend span.step-title').hide();
+                            }
+                        };
+                        setTimeout(function(){
+                        if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]')) {
+                            if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]') && $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').prop('disabled')) {
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').prop('disabled', true).attr('depdis',1);
+                                if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                    $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                }
+                                if($('fieldset.field-<?php echo $attribute->getAttributeCode(); ?>')){
+                                    $('fieldset.field-<?php echo $attribute->getAttributeCode(); ?>').prop('disabled', true).attr('depdis',1);
+                                }
+                                // $('.field-<?php echo $attribute->getAttributeCode(); ?>').addClass('dependent');
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').addClass('dependent');
+                               
+                            } else if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]') && !$('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').prop('disabled')) {
+                                check<?php echo $attribute->getAttributeCode(); ?>Dependency();
+                            }
+                            
+                            $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').on('change click',function(){
+                                check<?php echo $attribute->getAttributeCode(); ?>Dependency();
+                            });
+                            var observer<?php echo $attribute->getAttributeCode(); ?> = new MutationObserver(function(mutations) {
+                                if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]') && !$('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').prop('disabled')) {
+                                    check<?php echo $attribute->getAttributeCode(); ?>Dependency();
+                                } else {
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').prop('disabled', true).attr('depdis',1);
+                                    if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                        $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                    }
+                                    if($('fieldset.field-<?php echo $attribute->getAttributeCode(); ?>')){
+                                        $('fieldset.field-<?php echo $attribute->getAttributeCode(); ?>').prop('disabled', true).attr('depdis',1);
+                                    }
+                                    // $('.field-<?php echo $attribute->getAttributeCode(); ?>').addClass('dependent');
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').addClass('dependent');
+                                }
+                            });
+                            var target<?php echo $attribute->getAttributeCode(); ?> = document.querySelector('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]');
+                            observer<?php echo $attribute->getAttributeCode(); ?>.observe(target<?php echo $attribute->getAttributeCode(); ?>, {
+                                attributes: true
+                            });
+                        }
+                        }, 2000);
+                    });
+                });
+            </script>
+        <?php else: ?>
+            <script type="text/javascript">
+                require(['jquery'], function($){
+                    $(function() {
+                        setTimeout(function(){
+                            $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode="<?php echo $attribute->getAttributeCode(); ?>"]').attr('depdis',0);
+                            if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                $('#<?php echo $attribute->getAttributeCode(); ?>_value').attr('depdis',0);
+                            }
+                            if($('fieldset.field-<?php echo $attribute->getAttributeCode(); ?>')){
+                                $('fieldset.field-<?php echo $attribute->getAttributeCode(); ?>').attr('depdis',0);
+                            }
+                        }, 2000);
+                    });
+                });
+            </script>
+        <?php endif; ?>
+    <?php endforeach;?>
+<?php endif; ?>

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <checkoutorderattributesfields>
+            <general>
+                <active>1</active>
+                <heading>Additonal Checkout Fields</heading>
+            </general>
+        </checkoutorderattributesfields>
+        <general>
+            <validator_data>
+                <input_types>
+                    <checkbox>checkbox</checkbox>
+                    <radio>radio</radio>
+                    <message>message</message>
+                    <image>image</image>
+                    <file>file</file>
+                </input_types>
+            </validator_data>
+        </general>
+    </default>
+</config>

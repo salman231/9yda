@@ -1,0 +1,88 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_AdditionalCustomerAttributes
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+?>
+<?php
+$selectedOrder = $block->getSelectedOrder();
+$selectedValues = $block->getValue();
+$org = true;
+if ($selectedOrder != null) {
+    $coaf = json_decode($selectedOrder->getCoaf(), true);
+    $selectedValues = isset($coaf[$block->getCurrentAttribute()->getAttributeCode()]['value'])?$coaf[$block->getCurrentAttribute()->getAttributeCode()]['value']:'';
+    $org = false;
+}
+$ElementClass = 'field  field-' . $block->getAttributeId();
+$ElementClass .= $block->isRequired()? ' required' : '';
+?>
+<div class="<?php /* @escapeNotVerified */ echo $ElementClass; ?>">
+    <label class="label" for="<?php echo $block->getAttributeId()?>"><span><?php /* @escapeNotVerified */ echo $block->getLabel() ?></span></label>
+    <div class="control">
+            <?php //$block->getValue() ?>
+            
+            <div class="fme-uplaod-wrapper" id="upload-wrapper-<?php echo $block->getAttributeId()?>" data-bind="scope: '<?php echo $block->getAttributeId()?>'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
+            <input type="hidden" id="<?php echo $block->getAttributeId().'_browse';?>" name="<?php echo $block->getAttributeName();?>" value="<?php echo $selectedValues;?>" class="input-text admin__control-text <?php echo $block->getValidateClasses(); ?>">
+            <?php if ($block->getAllowedFileExtensions() != "") : ?>
+                <div class="note extensions"><?php /* @escapeNotVerified */ echo __("Allowed File Types: %1",trim($block->getAllowedFileExtensions())); ?></div>
+            <?php endif; ?>
+            <?php if ($block->getMaxSize() > 0) : ?>
+                <div class="note max_size"><?php /* @escapeNotVerified */ echo __("Maximum File Size Allowed: %1MB",$block->getMaxSize()); ?></div>
+            <?php endif; ?>
+        <?php //endif; ?>
+        <?php if ($_tooltip = $block->getTooltip()) : ?>
+        <div class="note"><?php /* @escapeNotVerified */ echo $_tooltip; ?></div>
+        <?php endif; ?>
+    </div>
+</div>
+<?php
+    if($block->getAttributeId() != ''):
+?>
+    <?php if ($org == true) : ?>
+        <script>
+            require([
+                'jquery',
+                'Magento_Sales/order/create/form'
+            ], function (jQuery) {
+                jQuery(document).ready(function () {
+                    setTimeout(function(){ 
+                        if (jQuery('#' + order.getAreaId('items')).is(':visible')) {
+                            if (!jQuery('.fme-uplaod-wrapper .file-uploader').is(':visible'))
+                            {
+                                location.reload();
+                            }
+                        }
+                    }, 1500);
+                });
+            });
+        </script>
+    <?php endif; ?>
+    <script type="text/x-magento-init">
+        <?php echo json_encode($block->getMagentoInit('image', $selectedValues)); ?>
+    </script>
+    <?php if ($org == false) : ?>
+        <script>
+            require([
+                'jquery'
+            ], function (jQuery) {
+                jQuery(document).ready(function () {
+                    setTimeout(function(){
+                        if (!jQuery('#upload-wrapper-<?php echo $block->getCurrentAttribute()->getAttributeCode(); ?> .file-uploader').is(':visible'))
+                        {
+                            if (jQuery.fn.applyBindings != undefined) {
+                                jQuery('#upload-wrapper-<?php echo $block->getCurrentAttribute()->getAttributeCode(); ?>').applyBindings();
+                            }
+                            jQuery('#upload-wrapper-<?php echo $block->getCurrentAttribute()->getAttributeCode(); ?>').trigger('contentUpdated');
+                        }
+                    }, 1000);
+                });
+            });
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

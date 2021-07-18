@@ -1,0 +1,37 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+/* @var $block \FME\CheckoutOrderAttributesFields\Block\Element\Textarea */
+?>
+<?php
+$selectedOrder = $block->getSelectedOrder();
+$selectedValues = $block->getEscapedValue();
+if ($selectedOrder != null) {
+    $coaf = json_decode($selectedOrder->getCoaf(), true);
+    $selectedValues = isset($coaf[$block->getCurrentAttribute()->getAttributeCode()]['value'])?$coaf[$block->getCurrentAttribute()->getAttributeCode()]['value']:'';
+}
+$ElementClass = 'admin__field field field-' . $block->getAttributeId();
+$ElementClass .= $block->isRequired() ? ' required' : '';
+?>
+<div class="<?php /* @escapeNotVerified */ echo $ElementClass; ?>">
+    <label class="label admin__field-label" for="<?php echo $block->getAttributeId()?>"><span><?php /* @escapeNotVerified */ echo $block->getLabel() ?></span></label>
+    <div class="admin__field-control">
+        <textarea data-form-part="customer_form" id="<?php echo $block->getAttributeId()?>" name="<?php /* @escapeNotVerified */ echo $block->getAttributeName()?>"
+        type= "textarea"
+        acode =  "<?php echo $block->getCurrentAttribute()->getAttributeCode(); ?>"
+        dependable = "<?php echo $block->getCurrentAttribute()->getFmeDependable(); ?>"
+        dcode = "<?php echo $block->getCurrentAttribute()->getFmeDcode(); ?>"
+        did = "<?php echo $block->getCurrentAttribute()->getFmeDid(); ?>"
+        dvalue = "<?php echo $block->getCurrentAttribute()->getFmeDvalue(); ?>"
+        rows="5" cols="25" <?php if ($block->getValidateClasses()):?> class="input-text admin__control-textarea <?php echo $block->getValidateClasses();?>"<?php endif;?>><?php /* @escapeNotVerified */ echo $selectedValues; ?></textarea>
+        <?php if ($_tooltip = $block->getTooltip()) : ?>
+        <div class="note"><?php /* @escapeNotVerified */ echo $_tooltip; ?></div>
+        <?php endif; ?>
+    </div>
+</div>

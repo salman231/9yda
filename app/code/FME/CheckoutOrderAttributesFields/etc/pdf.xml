@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Sales:etc/pdf_file.xsd">
+    <totals>
+        <total name="layaway_remaining">
+            <title translate="true">Layaway Remaining</title>
+            <source_field>layaway_remaining</source_field>
+            <!--<title_source_field>layaway_remaining_description</title_source_field>-->
+            <font_size>7</font_size>
+            <display_zero>false</display_zero>
+            <sort_order>650</sort_order>
+        </total>
+    </totals>
+</config>

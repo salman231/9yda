@@ -1,0 +1,102 @@
+<?php
+/**
+ *
+ * @category : FME
+ * @Package  : FME_CheckoutOrderAttributesFields
+ * @Author   : FME Extensions <support@fmeextensions.com>
+ * @copyright Copyright 2018 © fmeextensions.com All right reserved
+ * @license https://fmeextensions.com/LICENSE.txt
+ */
+$attributes = $block->getAvailableAttributes();
+
+if (!empty($attributes)):
+    $allattributes = $attributes->getData();
+    foreach ($attributes as $attribute) : ?>
+        <?php if($attribute->getFmeDependable() && $attribute->getFmeDcode() != ""
+                 && array_search($attribute->getFmeDcode(), array_column( $allattributes, 'attribute_code')) !== false): ?>
+            <script type="text/javascript">
+                require(['jquery'], function($){
+                    $(function() {
+                        function findOne(haystack, arr) {
+                            if(haystack !== undefined) {
+                                return arr.some(function (v) {
+                                    return haystack.indexOf(v) >= 0;
+                                });
+                            }
+                            return false;
+                        };
+                        function checkDependency() {
+                            var inputType = $('.field-<?php echo $attribute->getFmeDcode(); ?> [name^="custom_attributes[coaf][<?php echo $attribute->getFmeDcode(); ?>]"]').attr('type');
+                            var parentValues = '';
+                           
+                            if (inputType == 'checkbox' || inputType == 'radio') {
+                                parentValues = new Array();
+                                $.each($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]:checked'), function() {
+                                  parentValues.push($(this).val().replace(/(<([^>]+)>)/ig,""));
+                                });
+                            } else if (inputType == 'multiselect' || inputType == 'select') {
+                                parentValues = new Array();
+                                $.each($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"] option:selected'), function() {
+                                  parentValues.push($(this).val().replace(/(<([^>]+)>)/ig,""));
+                                });
+                            } else {
+                                parentValues = $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode="<?php echo $attribute->getFmeDcode(); ?>"]').val().replace(/(<([^>]+)>)/ig,"");
+                            }
+                            var found = findOne(parentValues, watchValues) ? 'true' : 'false';
+                            if(found == 'true' && $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').prop('dc') == 0) {
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?>').show();
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode=<?php echo $attribute->getAttributeCode(); ?>]').prop('disabled', false).attr('depdis',0);
+                                if ($('#<?php echo $attribute->getAttributeCode(); ?>_value')) {
+                                    $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', false).attr('depdis',0);
+                                }
+                            } else {
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode=<?php echo $attribute->getAttributeCode(); ?>]').prop('disabled', true).attr('depdis',1);
+                                if ($('#<?php echo $attribute->getAttributeCode(); ?>_value')) {
+                                    $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                }
+                            }
+                        };
+                        var watchValues = <?php echo json_encode(explode(",", $attribute->getFmeDvalue())); ?>;
+                        
+                        if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]')) {
+                            if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]') && $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').prop('disabled')) {
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode=<?php echo $attribute->getAttributeCode(); ?>]').prop('disabled', true).attr('depdis',1);
+                                if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                    $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                }
+                            } else if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]') && ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').prop('disabled') || !$('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').is(':visible'))) {
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode=<?php echo $attribute->getAttributeCode(); ?>]').prop('disabled', true).attr('depdis',1);
+                                if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                    $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                }
+                            } else if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]') && (!$('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').prop('disabled') && $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').is(':visible'))) {
+                                checkDependency();
+                            }
+                            $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').on('change click',function(){
+                                checkDependency();
+                            });
+                            var observer<?php echo $attribute->getFmeDcode(); ?> = new MutationObserver(function(mutations) {
+                                if ($('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]') && (!$('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').prop('disabled') && $('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]').is(':visible'))) {
+                                    checkDependency();
+                                } else {
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?>').hide();
+                                    $('.field-<?php echo $attribute->getAttributeCode(); ?> [acode=<?php echo $attribute->getAttributeCode(); ?>]').prop('disabled', true).attr('depdis',1);
+                                    if($('#<?php echo $attribute->getAttributeCode(); ?>_value')){
+                                        $('#<?php echo $attribute->getAttributeCode(); ?>_value').prop('disabled', true).attr('depdis',1);
+                                    }
+                                }
+                            });
+                            var target<?php echo $attribute->getFmeDcode(); ?> = document.querySelector('.field-<?php echo $attribute->getFmeDcode(); ?> [acode=<?php echo $attribute->getFmeDcode(); ?>]');
+                            observer<?php echo $attribute->getFmeDcode(); ?>.observe(target<?php echo $attribute->getFmeDcode(); ?>, {
+                                attributes: true
+                            });
+                        }
+                    });
+                });
+            </script>
+        <?php endif; ?>
+    <?php endforeach;?>
+<?php endif; ?>

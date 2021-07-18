@@ -1,0 +1,29 @@
+<?php
+	/**
+	 *
+	 * @category : FME
+	 * @Package  : FME_CheckoutOrderAttributesFields
+	 * @Author   : FME Extensions <support@fmeextensions.com>
+	 * @copyright Copyright 2018 © fmeextensions.com All right reserved
+	 * @license https://fmeextensions.com/LICENSE.txt
+	*/
+
+$blockGrid = $block->getBlockGrid();
+$gridJsObjectName = $blockGrid->getJsObjectName();
+?>
+<?php  echo $block->getGridHtml(); ?>
+<input type="hidden" name="category_products" id="in_category_products" data-form-part="checkoutorderattributesfields_attribute_edit" value="" />
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "FME_CheckoutOrderAttributesFields/products/assign-products": {
+                "selectedProducts": <?php /* @escapeNotVerified */ echo $block->getProductsJson(); ?>,
+                "gridJsObjectName": <?php /* @escapeNotVerified */ echo '"' . $gridJsObjectName . '"' ?: '{}'; ?>
+            }
+        }
+    }
+</script>
+<!-- @todo remove when "UI components" will support such initialization -->
+<script>
+    //require('mage/apply/main').apply();
+</script>
