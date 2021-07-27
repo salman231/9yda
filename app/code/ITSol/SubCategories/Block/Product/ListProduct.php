@@ -95,8 +95,11 @@ class ListProduct extends \Magento\Catalog\Block\Product\ListProduct implements 
             $this->_productCollection = $this->initializeProductCollection();
         }
         $productsCol = $this->_productCollection;
-
-        $productsCol->getSelect()->orderRand();
+        $category = $this->getLayer()->getCurrentCategory();
+        $catId = $category->getId();
+        if($catId && $catId == '19') {
+            $productsCol->getSelect()->orderRand();
+        }
         return $productsCol;
     }
 
